@@ -15,18 +15,24 @@
         <h1 class="app-title">Weather Dashboard</h1>
     </header>
 
-    <main class="flex-row justify-space-between">
-        <div class="col-12 col-md-4">
-            <div class="card">
-                <h3 class="card-header text-uppercase">Search for a City:</h3>
-                <form id="user-form" class="card-body">
-                    <label class="form-label" for="city"></label>
-                    <input name="city" id="city" type="text" autofocus="true" class="formInput" />
-                    <button type="submit" class="btn">Search</button>
-                </form>
+    <main class="container">
+        <div class="flex-row justify-space-between">
+            <div class="col-lg-5">
+                <div class="card">
+                    <h2 class="card-header text-uppercase">Search for a City:</h3>
+                    <form id="user-form" class="card-body">
+                        <div class="form-inline form-group">
+                            <label class="form-label" for="city"></label>
+                            <input name="city" id="city" type="text" autofocus="true" class="formInput" placeholder="City" />
+                            <div class="button-submit">
+                                <button type="submit" class="btn">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="list-group" id="history"></div>
+                </div>
             </div>
         </div>
-
         <div class="col-12 col-md-8">
             
         </div>
