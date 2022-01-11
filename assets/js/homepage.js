@@ -15,6 +15,10 @@ var citySearch = function() {
                     alert("Error: City Not Found");
                 }
             })
+            .catch(function(error) {
+                // Notice this '.catch()' getting chained onto the end of the '.then()' method
+                alert("Unable to connect to OpenWeather");
+            });
     })
 };
 
