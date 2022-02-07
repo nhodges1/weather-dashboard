@@ -1,5 +1,9 @@
-var formInput = document.querySelector('.formInput');
-var button = document.querySelector('.btn');
+var searchHistory = [];
+var weatherApi= 'https://api.openweathermap.org';
+var weatherApiKey= 'b8adb13d1cae612a2fdba72f3b012bf6';
+var searchForm = document.querySelector('#search-form');
+var searchInput = document.querySelector('#search-input');
+var todayContainer = document.querySelector('#today');
 
 var citySearch = function() {
     
