@@ -1,5 +1,5 @@
 var searchHistory = [];
-var weatherApi= 'https://api.openweathermap.org';
+var weatherApiRootUrl= 'https://api.openweathermap.org';
 var weatherApiKey= 'b8adb13d1cae612a2fdba72f3b012bf6';
 
 var searchForm = document.querySelector('#search-form');
@@ -155,6 +155,72 @@ function renderForecastCard(forecast, timezone) {
     humidityEl.textContent = `Humidity: ${humidity} %`;
 
     forecastContainer.append(col);
+}
+
+// display 5 day forecast
+function renderForecast(dailyForecast, timezone) {
+    // create unix timestamps for start and end of 5 day forecast
+    var startDt = dayjs().tz(timezone).add(1, 'day').startOf('day').unix();
+    var endDt = dayjs().tz(timezone).add(6, 'day').startOf('day').unix();
+
+    var headingCol = document.createElement('div');
+    var heading = document.createElement('h4');
+
+    headingCol.setAttribute('class', 'col-12');
+    heading.textContent = '5-Day Forecast:';
+    headingCol.append(heading);
+
+    forecastContainer.innerHTML = '';
+    forecastContainer.append(headingCol);
+    for (var i = 0; i < dailyForecast.length; i++) {
+        if (dailyForecast[i].dt >= startDt && dailyForecast[i].dt < endDt) {
+            renderForecastCard(dailyForecast[i], timezone);
+        }
+    }
+}
+
+function renderItems(city, data) {
+    renderCurrentWeather(city, data.current, data.timezone);
+    renderForecast(data.daily, data.timezone);
+}
+
+// fetch weather data for given location then calls function to display and forecast weather
+function fetchWeather(location) {
+    var { lat } = location;
+    var { lon } = location;
+    var city = location.name;
+    var apiUrl = `${weatherApiRootUrl}/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely, hourly&appid=${weatherApiKey}`;
+
+    fetch(apiUrl)
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (data) {
+            renderItems(city, data);
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+}
+
+function fetchCoords(search) {
+    var apiUrl = `${weatherApiRootUrl}/geo/1.0/direct?q=${search}&limit=5&appid=${weatherApiKey}`;
+
+    fetch(apiUrl)
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (data) {
+            if (!data[0]) {
+                alert('Location not found');
+            } else {
+                appendToHistory(search);
+                fetchWeather(data[0]);
+            }
+        })
+        .catch(function (err) {
+            console.error(err);
+        })
 }
 
 initSearchHistory();
