@@ -5,7 +5,7 @@ var weatherApiKey= 'b8adb13d1cae612a2fdba72f3b012bf6';
 var searchForm = document.querySelector('#search-form');
 var searchInput = document.querySelector('#search-input');
 var todayContainer = document.querySelector('#today');
-var forecastContainer = doucment.querySelector('#forecast');
+var forecastContainer = document.querySelector('#forecast');
 var searchHistoryContainer = document.querySelector('#history');
 
 // timezone plugins
@@ -112,28 +112,49 @@ function renderCurrentWeather (city, weather, timezone) {
     todayContainer.append(card);
 }
 
+// display forecast card given an object from open weather api
+// daily forecast
+function renderForecastCard(forecast, timezone) {
+    // variables for data from api
+    var unixTs = forecast.dt;
+    var iconUrl = `https://openweathermap.org/img/w/${forecast.weather[0].icon}.png`;
+    var iconDescription = forecast.weather[0].description;
+    var tempF = forecast.temp.day;
+    var { humidity } = forecast;
+    var windMph = forecast.wind_speed;
 
+    // create elements for card
+    var col = document.createElement('div');
+    var card = document.createElement('div');
+    var cardBody = document.createElement('div');
+    var cardTitle = document.createElement('h5');
+    var weatherIcon = document.createElement('img');
+    var tempEl = document.createElement('p');
+    var windEl = document.createElement('p');
+    var humidityEl = document.createElement('p');
 
+    col.append(card);
+    card.append(cardBody);
+    cardBody.append(cardTitle, weatherIcon, tempEl, windEl, humidityEl);
 
-var citySearch = function() {
-    
-    button.addEventListener('click', function(){
-        fetch('https://api.openweathermap.org/data/2.5/weather?q='+formInput+'&appid=75a3cc3d216cd996d36d719ba932debd')
-            .then(function(response) {
-                // request was successful
-                if (response.ok) {
-                    response.json().then(function(data) {
-                        
-                    })
-                } else {
-                    alert("Error: City Not Found");
-                }
-            })
-            .catch(function(error) {
-                // Notice this '.catch()' getting chained onto the end of the '.then()' method
-                alert("Unable to connect to OpenWeather");
-            });
-    })
-};
+    col.setAttribute('class', 'col-md');
+    col.classList.add('five-day-card');
+    card. setAttribute('class', 'card bg-primary h-100 text-white');
+    cardBody.setAttribute('class', 'card-body p-2');
+    cardTitle.setAttribute('class', 'card-title');
+    tempEl.setAttribute('class', 'crad-text');
+    windEl.setAttribute('class', 'card-text');
+    humidityEl.setAttribute('class', 'card-text');
 
-citySearch();
+    // add content to elements
+    cardTitle.textContent = dayjs.unix(unixTs).tz(timezone).format('M/D/YYYY');
+    weatherIcon.setAttribute('src', iconURL);
+    weatherIcon.setAttribute('alt', iconDescription);
+    tempEl.textContent = `Temp: ${tempF} °F`;
+    windEl.textContent = `Wind: ${windMph} MPH`;
+    humidityEl.textContent = `Humidity: ${humidity} %`;
+
+    forecastContainer.append(col);
+}
+
+initSearchHistory();
