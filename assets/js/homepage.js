@@ -78,7 +78,7 @@ function renderCurrentWeather (city, weather, timezone) {
     cardBody.setAttribute('class', 'card-body');
     card.append(cardBody);
 
-    heading.setAttribute('class', 'card');
+    heading.setAttribute('class', 'h3 card-title');
     tempEl.setAttribute('class', 'card-text');
     windEl.setAttribute('class', 'card-text');
     humidityEl.setAttribute('class', 'card-text');
@@ -93,8 +93,8 @@ function renderCurrentWeather (city, weather, timezone) {
     humidityEl.textContent = `Humidity: ${humidity} %`;
     cardBody.append(heading, tempEl, windEl, humidityEl);
 
-    uvEl.textcontent = 'UV Index: ';
-    uviBadge.classList.add('bth', 'btn-sm');
+    uvEl.textContent = 'UV Index: ';
+    uviBadge.classList.add('btn', 'btn-sm');
 
     if (uvi < 3) {
         uviBadge.classList.add('btn-success');
@@ -148,7 +148,7 @@ function renderForecastCard(forecast, timezone) {
 
     // add content to elements
     cardTitle.textContent = dayjs.unix(unixTs).tz(timezone).format('M/D/YYYY');
-    weatherIcon.setAttribute('src', iconURL);
+    weatherIcon.setAttribute('src', iconUrl);
     weatherIcon.setAttribute('alt', iconDescription);
     tempEl.textContent = `Temp: ${tempF} °F`;
     windEl.textContent = `Wind: ${windMph} MPH`;
@@ -223,4 +223,29 @@ function fetchCoords(search) {
         })
 }
 
+function handleSearchFormSubmit(e) {
+    // do not continue if there is nothing in the search bar
+    if (!searchInput.value) {
+        return;
+    }
+
+    e. preventDefault();
+    var search = searchInput.value.trim();
+    fetchCoords(search);
+    searchInput.value = '';
+}
+
+function handleSearchHistoryClick(e) {
+    // won't search if current elements is not a seacrh history button
+    if (!e.target.matches('.btn-history')) {
+        return;
+    }
+
+    var btn = e.target;
+    var search = btn.getAttribute('data-search');
+    fetchCoords(search);
+}
+
 initSearchHistory();
+searchForm.addEventListener('submit', handleSearchFormSubmit);
+searchHistoryContainer.addEventListener('click', handleSearchHistoryClick);
